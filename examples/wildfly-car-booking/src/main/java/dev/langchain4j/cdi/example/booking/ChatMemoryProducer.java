@@ -15,11 +15,4 @@ public class ChatMemoryProducer {
     public ChatMemory chatAiServiceMemory() {
         return MessageWindowChatMemory.withMaxMessages(10);
     }
-
-    @Produces
-    @ApplicationScoped
-    @Named("fraud-ai-service-memory")
-    public ChatMemory fraudAiServiceMemory() {
-        return MessageWindowChatMemory.withMaxMessages(5);
-    }
 }

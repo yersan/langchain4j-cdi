@@ -4,10 +4,8 @@ import dev.langchain4j.cdi.spi.RegisterAIService;
 import dev.langchain4j.service.SystemMessage;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 
-@SuppressWarnings("CdiManagedBeanInconsistencyInspection")
 @RegisterAIService(
         tools = BookingService.class,
-//        contentRetrieverName = "docRagRetriever",
         chatMemoryName = "chat-ai-service-memory",
         chatModelName = "ollama")
 public interface ChatAiService {

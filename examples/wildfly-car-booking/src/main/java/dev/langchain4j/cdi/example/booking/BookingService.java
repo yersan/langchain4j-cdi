@@ -2,7 +2,9 @@ package dev.langchain4j.cdi.example.booking;
 
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+
 import jakarta.enterprise.context.ApplicationScoped;
+
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -107,7 +109,7 @@ public class BookingService {
         if (LocalDate.now().plusDays(7).isAfter(booking.getStart())) {
             throw new BookingCannotBeCanceledException(booking.getBookingNumber() + " Too late");
         }
-        if (booking.getEnd().compareTo(booking.getStart().plusDays(3)) < 0) {
+        if (booking.getEnd().isBefore(booking.getStart().plusDays(3))) {
             throw new BookingCannotBeCanceledException(booking.getBookingNumber() + " Too short");
         }
     }
