@@ -1,0 +1,21 @@
+# WildFly AI subsystem configuration reference.
+#
+# The ollama-chat-model, in-memory-embedding-model-all-minilm-l6-v2, and
+# in-memory-embedding-store Galleon layers automatically configure the AI
+# subsystem with sensible defaults. This script is NOT executed during build.
+#
+# Default resources created by the layers:
+#   - ollama-chat-model named "ollama"
+#   - in-memory-embedding-model named "all-minilm-l6-v2"
+#   - in-memory-embedding-store named "in-memory"
+#
+# Environment variables for runtime configuration:
+#   OLLAMA_CHAT_URL           - Ollama server URL (default: http://127.0.0.1:11434)
+#   OLLAMA_CHAT_MODEL_NAME    - Model name (default: llama3.1:8b)
+#   OLLAMA_CHAT_TEMPERATURE   - Temperature (default: 0.9)
+#   OLLAMA_CHAT_LOG_REQUEST   - Log requests (default: true)
+#   OLLAMA_CHAT_LOG_RESPONSE  - Log responses (default: true)
+#   IN_MEMORY_EMBEDDING_FILE  - Embedding store persistence file (default: embeddings.json)
+#
+# Example: Override the model to use a different Ollama model:
+#   /subsystem=ai/ollama-chat-model=ollama:write-attribute(name=model-name, value=mistral:latest)

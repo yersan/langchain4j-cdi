@@ -1,0 +1,104 @@
+
+= wildfly-car-booking
+
+The `wildfly-car-booking` project is a Jakarta EE application demonstrating AI-powered car rental booking support
+using https://github.com/wildfly-extras/wildfly-ai-feature-pack[WildFly AI Feature Pack] and
+https://github.com/langchain4j/langchain4j-cdi[LangChain4j CDI].
+
+The chatbot acts as a customer support agent for "Miles of Smiles" car rental company, using:
+
+* *Ollama chat model* for natural language processing (configured via WildFly AI subsystem)
+* *RAG (Retrieval-Augmented Generation)* with in-memory embeddings for company documentation
+* *Tool calling* for booking management (lookup, cancellation, fraud detection)
+* *LangChain4j CDI* `@RegisterAIService` for declarative AI service injection
+
+== Prerequisites
+
+* Java 17+
+* Maven 3.9+
+* https://ollama.ai[Ollama] running locally with a model pulled:
+
+[source,shell]
+----
+ollama pull llama3.1:8b
+ollama serve
+----
+
+== Building the application
+
+[source,shell]
+----
+mvn clean package -DskipTests
+----
+
+Maven compiles the application and provisions a WildFly server with the AI Feature Pack.
+The server is created in `target/server` with the application deployed.
+
+Provisioning uses explicit Galleon feature packs and layers:
+
+* `org.wildfly:wildfly-galleon-pack` — base WildFly server
+* `org.wildfly.generative-ai:wildfly-ai-feature-pack` — AI capabilities
+* Layers: `jaxrs-server`, `ollama-chat-model`, `in-memory-embedding-model-all-minilm-l6-v2`, `in-memory-embedding-store`
+
+== Running the application
+
+[source,shell]
+----
+cd target/server
+./bin/standalone.sh
+----
+
+Once WildFly is running, the application is available at http://localhost:8080/
+
+=== Environment variables
+
+The Ollama connection is configurable via environment variables:
+
+[cols="1,2,1"]
+|===
+|Variable |Description |Default
+
+|`OLLAMA_CHAT_URL`
+|Ollama server URL
+|`http://127.0.0.1:11434`
+
+|`OLLAMA_CHAT_MODEL_NAME`
+|LLM model name
+|`llama3.1:8b`
+
+|`OLLAMA_CHAT_TEMPERATURE`
+|Temperature for generation
+|`0.9`
+|===
+
+== Testing the endpoints
+
+Chat with the assistant:
+
+[source,shell]
+----
+curl "http://localhost:8080/car-booking/chat?question=What+cars+are+available"
+curl "http://localhost:8080/car-booking/chat?question=I+am+James+Bond.+What+are+my+bookings"
+----
+
+Detect booking fraud:
+
+[source,shell]
+----
+curl "http://localhost:8080/car-booking/fraud?name=Emilio&surname=Largo"
+----
+
+== Integration tests
+
+[source,shell]
+----
+mvn clean package verify
+----
+
+Tests in `src/test` run against the provisioned server in `target/server`.
+
+== Resources
+
+* https://wildfly.org[WildFly]
+* https://github.com/wildfly-extras/wildfly-ai-feature-pack[WildFly AI Feature Pack]
+* https://github.com/langchain4j/langchain4j-cdi[LangChain4j CDI]
